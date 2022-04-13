@@ -3,6 +3,8 @@ import { Router } from 'itty-router';
 // Create a new router
 const router = Router();
 
+const baseUrl = 'https://api.openweathermap.org';
+
 router.get('/data/2.5/onecall', () => {
   return new Response('called /data/2.5/onecall');
 });
@@ -11,18 +13,35 @@ router.get('/geo/1.0/reverse', () => {
   return new Response('called /geo/1.0/reverse');
 });
 
-router.get('/geo/1.0/direct', (request) => {
-  const returnData = {
-    path: '/geo/1.0/direct',
-    q: request.query.q,
-    limit: request.query.limit,
-  };
+router.get('/geo/1.0/direct', async (request) => {
+  let q = request.query.q;
+  if (q == null) q = '';
+  let limit = request.query.limit;
+  if (limit == null) limit = 10;
 
-  return new Response(JSON.stringify(returnData), {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const res = await fetch(`${baseUrl}/geo/1.0/direct?q=${q}&limit=10&appid=${api_key}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await res.json();
+
+    return new Response(JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error) {
+    console.log(error.toString());
+    return new Response(JSON.stringify(error), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 });
 
 /*
