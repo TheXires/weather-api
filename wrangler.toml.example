@@ -6,3 +6,9 @@ workers_dev = true
 route = ""
 zone_id = ""
 compatibility_date = "2022-04-13"
+
+[build]
+command = "npm rud build"
+
+[build.upload]
+format = "service-worker"
