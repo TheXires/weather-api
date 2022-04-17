@@ -24,17 +24,7 @@ export const getWeatherOpenWeather = async (
     );
 
     const data: WeatherOpenWeather = await res.json();
-    const weather = openWeatherToGeneric(data);
-
-    weather.current.time += new Date().getTimezoneOffset() * 60 * 1000;
-    weather.hourly.forEach(
-      (element) => (element.time += new Date().getTimezoneOffset() * 60 * 1000),
-    );
-    weather.daily.forEach(
-      (element) => (element.time += new Date().getTimezoneOffset() * 60 * 1000),
-    );
-
-    return weather;
+    return openWeatherToGeneric(data);
   } catch (error) {
     console.log('getWeatherOpenWeather error: ', error);
     return undefined;
